@@ -26,3 +26,5 @@ uploadArchives {
 		}
 	}
 }
+
+build.dependsOn(uploadArchives)
