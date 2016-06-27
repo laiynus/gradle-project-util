@@ -11,7 +11,8 @@ class UtilPlugin implements Plugin<Project>{
     
     void applyTasks(Project project) {
         [
-            'sortProperties': 'Sort file gradle.properties'
+            'sortProperties': 'Sort file gradle.properties',
+            '':''
         ].each { taskName, taskDescription ->
             def commandName = taskName
             project.task(taskName, type: UtilTask) {
