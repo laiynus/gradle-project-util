@@ -12,7 +12,7 @@ class UtilPlugin implements Plugin<Project>{
     void applyTasks(Project project) {
         [
             'sortProperties': 'Sort file gradle.properties',
-            '':''
+            'cleanIDEFiles': 'Clean IDE system files'
         ].each { taskName, taskDescription ->
             def commandName = taskName
             project.task(taskName, type: UtilTask) {
