@@ -4,6 +4,8 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 
+import org.apache.cxf.tools.wsdlto.WSDLToJava
+
 import com.epam.khrapavitski.gradle.util.pogo.WSDL
 
 class UtilTask extends DefaultTask {
@@ -23,6 +25,9 @@ class UtilTask extends DefaultTask {
                 break
             case ~/\b(C|c)lean(Services|services)?\b/:
                 cleanSidedServices()
+                break
+            case ~/\b(W|w)sdl2(Java|java)?\b/:
+                wsdl2Java()
                 break
             default:
                 println "gradle-project-util: Unkown command"
@@ -56,7 +61,6 @@ class UtilTask extends DefaultTask {
             def file = project.file("${project.projectDir}/services/${wsdl.getServiceName()}/src/main/resources/${wsdl.getFileName()}")
             if(!file.exists()){
                 file.getParentFile().mkdirs()
-                new File(file.getName()).createNewFile()
             }
             wsdl.getUrl().toURL().withInputStream {is ->
                 file.withOutputStream {os ->
@@ -65,6 +69,25 @@ class UtilTask extends DefaultTask {
                 }
             }
             println "gradle-project-util: WSDL file from ${wsdl.getUrl()} succsessfuly downloaded"
+        }
+    }
+    
+    def wsdl2Java(){
+        def wsdls = project.gradleUtil.wsdls
+        def wsdlsToGenerate = []
+        wsdls.each{WSDL wsdl ->
+            wsdlsToGenerate << [
+                '-p',
+                "com.epam.khrapavitski.${wsdl.getServiceName()}",
+                '-d',
+                "${project.projectDir}/services/${wsdl.getServiceName()}/src/main/java",
+                '-autoNameResolution',
+                "${project.projectDir}/services/${wsdl.getServiceName()}/src/main/resources/${wsdl.getFileName()}"
+            ]
+        }
+        wsdlsToGenerate.each {println "gradle-project-util: following parametrs to wsdl2java" +  it}
+        wsdlsToGenerate.each{args ->
+            WSDLToJava.main(args as String[])
         }
     }
 
