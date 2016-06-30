@@ -85,22 +85,23 @@ class UtilTask extends DefaultTask {
                 "${project.projectDir}/services/${wsdl.getServiceName()}/src/main/resources/${wsdl.getFileName()}"
             ]
         }
-        wsdlsToGenerate.each {println "gradle-project-util: following parametrs to wsdl2java" +  it}
         wsdlsToGenerate.each{args ->
+            println "gradle-project-util: Executing wsdl2java with parametrs: " + args 
             WSDLToJava.main(args as String[])
+            println "gradle-project-util: Successe executing wsdl2java"
         }
     }
 
     def cleanSidedServices(){
         def wsdls = project.gradleUtil.wsdls
         wsdls.each{WSDL wsdl ->
-            def directory = project.file("${project.projectDir}/services/${wsdl.getServiceName()}/src/")
+            def directory = project.file("${project.projectDir}/services/${wsdl.getServiceName()}/src/main/java/")
             if(directory.exists()){
                 directory.deleteDir()
-                println "gradle-project-util: Sided services succsessfuly deleted"
+                println "gradle-project-util: Sided service ${wsdl.getServiceName()} succsessfuly deleted"
             }else{
-                println "gradle-project-util: Sided services is not found"
-                project.logger.debug("gradle-project-util: Sided services is not found")
+                println "gradle-project-util: Sided service ${wsdl.getServiceName()} is not found"
+                project.logger.debug("gradle-project-util: Sided service ${wsdl.getServiceName()} is not found")
             }
         }
     }
