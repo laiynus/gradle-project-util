@@ -15,6 +15,7 @@ dependencies {
     compile group: 'org.apache.cxf', name: 'cxf-tools-wsdlto-core', version: '3.1.6'
     compile group: 'org.apache.cxf', name: 'cxf-tools-wsdlto-databinding-jaxb', version: '3.1.6'
     compile group: 'org.apache.cxf', name: 'cxf-tools-wsdlto-frontend-jaxws', version: '3.1.6'
+    compile group: 'org.apache.cxf', name: 'cxf-tools-java2ws', version: '3.1.6'
     testCompile 'junit:junit:4.12'
 }
 

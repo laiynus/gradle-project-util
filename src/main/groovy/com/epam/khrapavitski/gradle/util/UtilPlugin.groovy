@@ -19,7 +19,8 @@ class UtilPlugin implements Plugin<Project>{
             'sortProperties': 'Sort file gradle.properties',
             'downloadWSDL': 'Download wsdl file from outside webservice',
             'cleanServices': 'Clean java classes and wslds file of sided webservices',
-            'wsdl2Java': 'Genenate java source code from WSDL-file'
+            'wsdl2Java': 'Genenate java source code from WSDL-file',
+            'java2WSDL': 'Genenate WSDL files from java source code'
         ].each { taskName, taskDescription ->
             def commandName = taskName
             project.task(taskName, type: UtilTask) {

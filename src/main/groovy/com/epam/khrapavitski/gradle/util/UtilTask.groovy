@@ -5,7 +5,9 @@ import org.gradle.api.tasks.TaskAction
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 
 import org.apache.cxf.tools.wsdlto.WSDLToJava
+import org.apache.cxf.tools.java2ws.JavaToWS
 
+import com.epam.khrapavitski.gradle.util.pogo.JavaClass
 import com.epam.khrapavitski.gradle.util.pogo.WSDL
 
 class UtilTask extends DefaultTask {
@@ -29,6 +31,9 @@ class UtilTask extends DefaultTask {
             case ~/\b(W|w)sdl2(Java|java)?\b/:
                 wsdl2Java()
                 break
+            case ~/\b(J|j)ava2(WSDL|wsdl)?\b/:
+                java2WSDL()
+                break;
             default:
                 println "gradle-project-util: Unkown command"
                 break
@@ -71,7 +76,7 @@ class UtilTask extends DefaultTask {
             println "gradle-project-util: WSDL file from ${wsdl.getUrl()} succsessfuly downloaded"
         }
     }
-    
+
     def wsdl2Java(){
         def wsdls = project.gradleUtil.wsdls
         def wsdlsToGenerate = []
@@ -86,9 +91,33 @@ class UtilTask extends DefaultTask {
             ]
         }
         wsdlsToGenerate.each{args ->
-            println "gradle-project-util: Executing wsdl2java with parametrs: " + args 
+            println "gradle-project-util: Executing wsdl2java with parametrs: " + args
             WSDLToJava.main(args as String[])
             println "gradle-project-util: Successe executing wsdl2java"
+        }
+    }
+    
+    def java2WSDL(){
+        def javaClasses = project.gradleUtil.javaClasses
+        def javaClassesToGenerate = []
+        javaClasses.each{JavaClass javaClass ->
+            javaClassesToGenerate << [
+                "-o",
+                "${javaClass.getWsdlName()}",
+                "-wsdl",
+                "-d",
+                "${project.projectDir}/wsdls",
+                "-cp",
+                "${javaClass.getClassDir()}",
+                "-classdir",
+                "${javaClass.getClassDir()}",
+                "${javaClass.getClassName()}"
+            ]
+        }
+        javaClassesToGenerate.each{args ->
+            println "gradle-project-util: Executing java2ws with parametrs: " + args
+            JavaToWS.main(args as String[])
+            println "gradle-project-util: Successe executing java2ws"
         }
     }
 
@@ -105,5 +134,4 @@ class UtilTask extends DefaultTask {
             }
         }
     }
-    
 }
